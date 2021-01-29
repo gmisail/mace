@@ -1,0 +1,7 @@
+assets/
+tools/
+.vscode/
+
+main.cpp
+config.lua
+Tiles
