@@ -16,10 +16,10 @@
 class Tilemap
 {
     public:
-        Tilemap(int);
+        Tilemap(int, Camera*);
         ~Tilemap();
 
-        void update(Camera&);
+        void update();
         void render(sf::RenderWindow&);
 
     	void bindFunctions(sol::state&);
@@ -28,11 +28,15 @@ class Tilemap
         std::unordered_map<int, Chunk*>::iterator removeChunk(ChunkCoordinate);
         bool chunkExists(ChunkCoordinate);
         
-        void cullChunks(Camera&);
+        void cullChunks();
     private:
         Tileset* tileset;
+        Camera* camera;
+
         sf::RenderStates state;
         int seed;
+
+        std::thread cullingThread;
         
         // hash maps allow for faster lookup since we can just encode a
         // chunk as (y * w + x) and use that as the key.

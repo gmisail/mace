@@ -3,10 +3,11 @@
 
 #include <sol/sol.hpp>
 
-Tilemap::Tilemap(int seed)
+Tilemap::Tilemap(int seed, Camera* camera)
 {
     std::cout << "creating tilemap " << std::endl;
 
+    this->camera = camera;
     this->seed = seed;
 
     std::string path = "assets/autotile.png";
@@ -75,12 +76,12 @@ std::unordered_map<int, Chunk*>::iterator Tilemap::removeChunk(ChunkCoordinate c
     return this->chunks.end();
 }
 
-void Tilemap::cullChunks(Camera& camera)
+void Tilemap::cullChunks()
 {
     int added = 0;
     int removed = 0;
 
-    ChunkCoordinate coord = camera.getCurrentChunk();
+    ChunkCoordinate coord = this->camera->getCurrentChunk();
 
     for(int i = -1; i < 2; i++)
     {
@@ -95,7 +96,7 @@ void Tilemap::cullChunks(Camera& camera)
         Chunk* chunk = itr->second;
 
         // make sure that its within 1 chunk of the camera
-        if(abs(chunk->getCoordinate().x - camera.getCurrentChunk().x) > 1 || abs(chunk->getCoordinate().y - camera.getCurrentChunk().y) > 1)
+        if(abs(chunk->getCoordinate().x - this->camera->getCurrentChunk().x) > 1 || abs(chunk->getCoordinate().y - this->camera->getCurrentChunk().y) > 1)
         {
             itr = removeChunk(chunk->getCoordinate());
             removed++;
@@ -116,14 +117,14 @@ void Tilemap::bindFunctions(sol::state& lua)
     });
 }
 
-void Tilemap::update(Camera& camera)
+void Tilemap::update()
 {       
-    if(this->previousChunk.x != camera.getCurrentChunk().x || this->previousChunk.y != camera.getCurrentChunk().y)
+    if(this->previousChunk.x != this->camera->getCurrentChunk().x || this->previousChunk.y != this->camera->getCurrentChunk().y)
     {
-        this->cullChunks(camera);
+        this->cullChunks();
 
-        this->previousChunk.x = camera.getCurrentChunk().x;
-        this->previousChunk.y = camera.getCurrentChunk().y;
+        this->previousChunk.x = this->camera->getCurrentChunk().x;
+        this->previousChunk.y = this->camera->getCurrentChunk().y;
     }
 }
 

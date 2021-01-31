@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <sol/sol.hpp>
+#include <string>
 
 #include "input/input.hpp"
 #include "physics/physics.hpp"
@@ -16,7 +17,7 @@ class Engine
 {
 
     public:
-        Engine(int, int);
+        Engine();
         ~Engine();
 
         entt::entity createEntity();
@@ -49,6 +50,8 @@ class Engine
         int width;
         int height;
         int fps;
+
+        std::string title;
 
         float delta;
 

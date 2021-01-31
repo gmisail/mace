@@ -1,16 +1,15 @@
 #include "engine.hpp"
 
-Engine::Engine(int width, int height)
+Engine::Engine()
 {
-    // setup
-    this->width = width;
-    this->height = height;
-
     this->sol.open_libraries(sol::lib::base, sol::lib::math, sol::lib::package);
     this->sol.script_file("config.lua");
 
+    this->width = this->sol["window"]["width"];
+    this->height = this->sol["window"]["height"];
+    this->title = this->sol["window"]["title"];
 
-    window.create(sf::VideoMode(this->width, this->height), "title");
+    window.create(sf::VideoMode(this->width, this->height), this->title);
     window.setFramerateLimit(60);
 
     camera.setPosition(this->width / 2, this->height / 2);
@@ -29,8 +28,7 @@ entt::entity Engine::createEntity()
 void Engine::createScript(entt::entity entity, const std::string& name, const std::string& path)
 {
     this->sol.script_file(path);
-
-
+    this->sol[name]["setup"]();
     this->registry.emplace<Script>(entity, name);
 }
 
