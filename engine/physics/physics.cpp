@@ -46,6 +46,13 @@ void Physics::update(entt::registry& registry, float delta)
         {
             motion.vx = lerp(motion.vx, 0, 0.5);
         }
+
+        // if moving in x & y directions, normalize the vector
+        if(motion.vx != 0 && motion.vy != 0)
+        {
+            motion.vx /= 1.41421; // <-- roughly the sqrt(2), faster than re-computing it 60 times a frame.
+            motion.vy /= 1.41421;
+        }
         
         position.x += motion.vx;
         position.y += motion.vy;

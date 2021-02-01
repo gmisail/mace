@@ -52,6 +52,8 @@ void Engine::update()
     this->input.update(this->registry);
     this->physics.update(this->registry, this->delta);
     
+    
+
     this->camera.follow(this->registry, this->delta);
     this->camera.update();
     
