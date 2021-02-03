@@ -13,7 +13,8 @@ server.on('listening', () => {
 });
 
 server.on('message', (message, remote) => {
-    console.log("[mace] " + message);
+    let obj = JSON.parse(message);
+    console.log("[mace] " + obj.name, obj.age, obj.school);
 });
 
 server.bind(PORT, IP);

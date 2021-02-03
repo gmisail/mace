@@ -1,7 +1,7 @@
 #ifndef INPUT
 #define INPUT
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <entt/entt.hpp>
 #include <iostream>
 #include <string>
@@ -12,11 +12,17 @@ class Input
 {
     public:
         void update(entt::registry&);
-        void on(std::string, std::function<void()>);
-        void emit(std::string);
+        bool getAction(const std::string&);
+
+
+        void bindButton(std::string, sf::Keyboard::Key);        // keyboard button
+        void bindButton(std::string, int, int);                 // controller input
     
     private:
-        std::unordered_map<std::string, std::function<void()> > bindings;
+        std::unordered_map<std::string, bool> states;
+
+        std::unordered_map<sf::Keyboard::Key, std::string> keyboardBindings;
+        std::unordered_map<int, std::string> controllerBindings;
 };
 
 #endif

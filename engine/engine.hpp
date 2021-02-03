@@ -27,6 +27,8 @@ class Engine
         void begin();
         void end();
 
+        void onResize(sf::Event&);
+
         sf::RenderWindow* getWindow()
         {
             return &(this->window);
@@ -35,6 +37,11 @@ class Engine
         Camera* getCamera() 
         {
             return &(this->camera);
+        }
+
+        Input* getInput()
+        {
+            return &(this->input);
         }
 
         entt::registry* getRegistry()

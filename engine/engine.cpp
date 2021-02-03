@@ -46,16 +46,29 @@ void Engine::end()
     this->delta = clock.restart().asSeconds();
 }
 
+void Engine::onResize(sf::Event& event)
+{
+    this->camera.getView()->setSize(sf::Vector2f(event.size.width / 2, event.size.height / 2));
+}
+
 void Engine::update()
 {
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            window.close();
+        
+        if(event.type == sf::Event::Resized)
+            this->onResize(event);
+    }
+
     this->scripting.update(this->registry, this->sol);
     this->input.update(this->registry);
-    this->physics.update(this->registry, this->delta);
+    this->physics.update(this->registry, this->delta, this->input);
     
-    
+    this->renderer.update(this->registry);
 
     this->camera.follow(this->registry, this->delta);
     this->camera.update();
-    
-    this->renderer.update(this->registry);
 }

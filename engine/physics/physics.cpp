@@ -1,12 +1,6 @@
 #include "physics.hpp"
-#include "../math/lerp.hpp"
-#include "../components/movement.h"
-#include "../components/position.h"
-#include "../components/motion.h"
 
-#include <iostream>
-
-void Physics::update(entt::registry& registry, float delta)
+void Physics::update(entt::registry& registry, float delta, Input& input)
 {
     auto view = registry.view<Motion, Position, Movement>();
 
@@ -17,41 +11,41 @@ void Physics::update(entt::registry& registry, float delta)
         auto& motion = registry.get<Motion>(entity);
         auto& position = registry.get<Position>(entity);
 		
-        if(sf::Keyboard::isKeyPressed(movement.up))
+        if(input.getAction("up"))
         {
             motion.vy = -movement.speed * delta; // use some sort of delta here
             moving = true;
         }
-        else if(sf::Keyboard::isKeyPressed(movement.down))
+        else if(input.getAction("down"))
         {
             motion.vy = movement.speed * delta;
             moving = true;
         }
         else
         {
-            motion.vy = lerp(motion.vy, 0, 0.5);
+            motion.vy = lerp(motion.vy, 0, 0.35);
         }
 
-        if(sf::Keyboard::isKeyPressed(movement.right))
+        if(input.getAction("right"))
         {
             motion.vx = movement.speed * delta;
             moving = true;
         }
-        else if(sf::Keyboard::isKeyPressed(movement.left))
+        else if(input.getAction("left"))
         {
             motion.vx = -movement.speed * delta;
             moving = true;
         }
         else
         {
-            motion.vx = lerp(motion.vx, 0, 0.5);
+            motion.vx = lerp(motion.vx, 0, 0.35);
         }
 
         // if moving in x & y directions, normalize the vector
         if(motion.vx != 0 && motion.vy != 0)
         {
-            motion.vx /= 1.41421; // <-- roughly the sqrt(2), faster than re-computing it 60 times a frame.
-            motion.vy /= 1.41421;
+            motion.vx /= 1.4; // <-- roughly the sqrt(2), faster than re-computing it 60 times a frame.
+            motion.vy /= 1.4;
         }
         
         position.x += motion.vx;

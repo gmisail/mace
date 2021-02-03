@@ -2,42 +2,44 @@
 
 void Input::update(entt::registry& registry)
 {
-    //auto view = registry.view<
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    for (auto const& button : this->keyboardBindings)
     {
-        this->emit("left");
+        if(sf::Keyboard::isKeyPressed(button.first))
+        {
+            this->states[button.second] = true;
+        }
+        else 
+        {
+            this->states[button.second] = false;
+        }
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    for (auto const& button : this->controllerBindings)
     {
-        this->emit("right");
-    }
-    
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-    {
-        this->emit("up");
-    }
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-    {
-        this->emit("down");
+        if(sf::Joystick::isButtonPressed(0, button.first))
+        {
+            this->states[button.second] = true;
+        }
+        else 
+        {
+            this->states[button.second] = false;
+        }
     }
 }
 
-void Input::on(std::string name, std::function<void()> callback)
+bool Input::getAction(const std::string& action)
 {
-    this->bindings.insert(std::make_pair(name, callback));
+    return this->states[action];
 }
 
-void Input::emit(std::string name)
+void Input::bindButton(std::string name, sf::Keyboard::Key key)
 {
-    std::unordered_map<std::string, std::function<void()>>::iterator callback = this->bindings.find(name);
-    
-    if(callback == this->bindings.end())
-    {
-        std::cerr << "Cannot find event with name " << name << std::endl;
-        return;
-    }
+    this->keyboardBindings[key] = name;
+    this->states[name] = false;                 // the initial state of each key is false.
+}
 
-    callback->second();
-}   
+void Input::bindButton(std::string name, int controller, int button)
+{
+    this->controllerBindings[button] = name;        
+    this->states[name] = false;
+}
