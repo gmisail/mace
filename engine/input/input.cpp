@@ -16,6 +16,9 @@ void Input::update(entt::registry& registry)
 
     for (auto const& button : this->controllerBindings)
     {
+        if(this->states[button.second])
+            continue;
+            
         if(sf::Joystick::isButtonPressed(0, button.first))
         {
             this->states[button.second] = true;

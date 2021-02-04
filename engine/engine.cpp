@@ -12,7 +12,7 @@ Engine::Engine()
     window.create(sf::VideoMode(this->width, this->height), this->title);
     window.setFramerateLimit(60);
 
-    camera.setPosition(this->width / 2, this->height / 2);
+    camera.setPosition(0, 0);//this->width / 2, this->height / 2);
 }
 
 Engine::~Engine()
