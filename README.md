@@ -6,4 +6,5 @@ MaceEngine is my personal game engine that I develop in my free time. It is not 
 - Entity component system
 - Lua scripting
 - Infinite tilemap system
-- Camera management (scrolling)
+- Camera management (scrolling with linear interpolation, follow entity)
+- Input binding
