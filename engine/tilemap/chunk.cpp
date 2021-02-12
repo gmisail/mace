@@ -31,6 +31,30 @@ Chunk::Chunk(ChunkCoordinate coord, Tileset* tileset, int seed)
             if(val < 15)
                 tileNumber = TILE_WATER;
 
+            /*
+            if(foregroundVal < 13 && tileNumber != TILE_WATER)
+            {
+                int tile = TILE_ROCK + 1;
+               // int tile = foregroundVal < 10 ? TILE_BUSH : TILE_ROCK;
+                int tu = tile % (this->tileset->getTexture()->getSize().x / TILE_SIZE);
+                int tv = tile / (this->tileset->getTexture()->getSize().x / TILE_SIZE);
+
+                sf::Vertex v1(sf::Vector2f(coord.x * (TILE_SIZE * 16) + (i * TILE_SIZE), coord.y * (TILE_SIZE * 16) + j * TILE_SIZE));
+                sf::Vertex v2(sf::Vector2f(coord.x * (TILE_SIZE * 16) + (i + 1) * TILE_SIZE, coord.y * (TILE_SIZE * 16) + j * TILE_SIZE));
+                sf::Vertex v3(sf::Vector2f(coord.x * (TILE_SIZE * 16) + (i + 1) * TILE_SIZE, coord.y * (TILE_SIZE * 16) + (j + 2) * TILE_SIZE));
+                sf::Vertex v4(sf::Vector2f(coord.x * (TILE_SIZE * 16) + i * TILE_SIZE, coord.y * (TILE_SIZE * 16) + (j + 2) * TILE_SIZE));
+
+                v1.texCoords = sf::Vector2f(tu * TILE_SIZE, tv * TILE_SIZE);
+                v2.texCoords = sf::Vector2f((tu + 1) * TILE_SIZE, tv * TILE_SIZE);
+                v3.texCoords = sf::Vector2f((tu + 1) * TILE_SIZE, (tv + 2) * TILE_SIZE);
+                v4.texCoords = sf::Vector2f(tu * TILE_SIZE, (tv + 2) * TILE_SIZE);
+
+                this->foreground.append(v1);
+                this->foreground.append(v2);
+                this->foreground.append(v3);
+                this->foreground.append(v4);
+            }
+            */
 
             int foregroundVal = rand() % 100;
             if(foregroundVal < 13 && tileNumber != TILE_WATER)

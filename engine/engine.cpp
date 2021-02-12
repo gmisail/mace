@@ -12,6 +12,7 @@ Engine::Engine()
     window.create(sf::VideoMode(this->width, this->height), this->title);
     window.setFramerateLimit(60);
 
+    camera.setSize(this->width / 4, this->height / 4);
     camera.setPosition(0, 0);//this->width / 2, this->height / 2);
 }
 
@@ -48,7 +49,8 @@ void Engine::end()
 
 void Engine::onResize(sf::Event& event)
 {
-    this->camera.getView()->setSize(sf::Vector2f(event.size.width / 2, event.size.height / 2));
+  //  this->camera.getView()->zoom((event.size.width / (float) event.size.height) / (1 / (this->width / height)));
+    //this->camera.getView()->setSize(sf::Vector2f(event.size.width / 2, event.size.height / 2));
 }
 
 void Engine::update()

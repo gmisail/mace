@@ -21,6 +21,11 @@ Camera::~Camera()
     delete this->view;
 }
 
+void Camera::setSize(float x, float y)
+{
+    this->view->setSize(x, y);
+}
+
 void Camera::follow(entt::registry& registry, float delta)
 {
    	auto view = registry.view<Position, Follow>();

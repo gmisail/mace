@@ -20,6 +20,7 @@ class Camera
 
         void update();
         void follow(entt::registry&, float);
+        void setSize(float, float);
         
         const sf::Vector2f getPosition() const
         {
