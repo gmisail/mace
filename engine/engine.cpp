@@ -26,6 +26,11 @@ entt::entity Engine::createEntity()
     return this->registry.create();
 }
 
+void Engine::runScript(const std::string& path)
+{
+    this->sol.script_file(path);
+}
+
 void Engine::createScript(entt::entity entity, const std::string& name, const std::string& path)
 {
     this->sol.script_file(path);

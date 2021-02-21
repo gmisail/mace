@@ -5,18 +5,17 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include <mutex>
-#include <future>
+#include <sol/sol.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "tileset.hpp"
 #include "chunk.hpp"
-#include "../camera/camera.hpp"
+#include "../engine.hpp"
 
 class Tilemap
 {
     public:
-        Tilemap(int, Camera*);
+        Tilemap(int, Engine*);
         ~Tilemap();
 
         void update();
@@ -32,12 +31,11 @@ class Tilemap
     private:
         Tileset* tileset;
         Camera* camera;
+        std::unordered_map<std::string, std::vector<int>> tiles;
 
         sf::RenderStates state;
         int seed;
 
-        std::thread cullingThread;
-        
         // hash maps allow for faster lookup since we can just encode a
         // chunk as (y * w + x) and use that as the key.
         std::unordered_map<int, Chunk*> chunks;

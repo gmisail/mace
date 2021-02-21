@@ -3,33 +3,29 @@
 
 #include <sol/sol.hpp>
 
-Tilemap::Tilemap(int seed, Camera* camera)
+Tilemap::Tilemap(int seed, Engine* engine)
 {
     std::cout << "creating tilemap " << std::endl;
 
-    this->camera = camera;
+    this->camera = engine->getCamera();
     this->seed = seed;
 
     std::string path = "assets/autotile.png";
 
     this->tileset = new Tileset(path);
-    this->tileset->setTileBitmask(0, 0); //
-    this->tileset->setTileBitmask(1, 1);  //
-    this->tileset->setTileBitmask(2, 2);
-    this->tileset->setTileBitmask(3, 3);
-    this->tileset->setTileBitmask(4, 4);
-    this->tileset->setTileBitmask(5, 5);
-    this->tileset->setTileBitmask(6, 6);
-    this->tileset->setTileBitmask(7, 7);    //
-    this->tileset->setTileBitmask(8, 8);
-    this->tileset->setTileBitmask(9, 9);   //
-    this->tileset->setTileBitmask(10, 10);
-    this->tileset->setTileBitmask(11, 11);
-    this->tileset->setTileBitmask(12, 12);   //
-    this->tileset->setTileBitmask(13, 13);  //
-    this->tileset->setTileBitmask(14, 14);   //
-    this->tileset->setTileBitmask(15, 15);  //
- 
+
+    auto world = (*engine->getScripting())["world"].get_or_create<sol::table>();
+    auto blocks = world["blocks"].get_or_create<sol::table>();
+
+    blocks.set_function("add", [this](int tile, int bitmask){
+        this->tileset->setTileBitmask(tile, bitmask);
+    });
+
+    blocks.set_function("addGroup", [this](std::string name, std::vector<int> tiles){
+        std::cout << "registering tile group " << name << std::endl;
+        this->tiles[name] = std::vector(tiles);
+    });
+
     this->state.texture = this->tileset->getTexture();
 }
 
@@ -112,9 +108,7 @@ void Tilemap::cullChunks()
 
 void Tilemap::bindFunctions(sol::state& lua)
 {
-    lua.set_function("RegisterBitwiseTile", [](){
-        std::cout << "register bitwise" << std::endl;
-    });
+    
 }
 
 void Tilemap::update()

@@ -22,6 +22,7 @@ class Engine
 
         entt::entity createEntity();
         void createScript(entt::entity entity, const std::string& name, const std::string& path);
+        void runScript(const std::string& path);
 
         void update();
         void begin();
@@ -47,6 +48,11 @@ class Engine
         entt::registry* getRegistry()
         {
             return &(this->registry);
+        }
+
+        sol::state* getScripting()
+        {
+            return &(this->sol);
         }
 
         const int getWidth() const;
