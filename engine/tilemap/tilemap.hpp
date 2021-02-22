@@ -10,6 +10,7 @@
 
 #include "tileset.hpp"
 #include "chunk.hpp"
+#include "biome.hpp"
 #include "../engine.hpp"
 
 class Tilemap
@@ -32,6 +33,7 @@ class Tilemap
         Tileset* tileset;
         Camera* camera;
         std::unordered_map<std::string, std::vector<int>> tiles;
+        std::unordered_map<std::string, Biome> biomes;
 
         sf::RenderStates state;
         int seed;

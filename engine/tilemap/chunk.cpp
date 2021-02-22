@@ -1,11 +1,12 @@
 #include "chunk.hpp"
-#include "tiles.hpp"
 
-Chunk::Chunk(ChunkCoordinate coord, Tileset* tileset, int seed)
+Chunk::Chunk(ChunkCoordinate coord, Tileset* tileset, std::unordered_map<std::string, Biome>& biomes, std::unordered_map<std::string, std::vector<int>>& tiles, int seed)
 {
     this->coord.x = coord.x;
     this->coord.y = coord.y;
     this->tileset = tileset;
+    this->biomes = &biomes;
+    this->tileGroups = &tiles;
 
     this->vertices.setPrimitiveType(sf::Quads);
     this->vertices.resize(16 * 16 * 4);
@@ -94,7 +95,6 @@ void Chunk::setTile(int x, int y, int id)
 
 void Chunk::autotile(FastNoiseLite& noise)
 {
-    // wont work around chunk seams for now
     for (unsigned int i = 0; i < 16; ++i)
     {
         for (unsigned int j = 0; j < 16; ++j)
@@ -121,9 +121,42 @@ void Chunk::autotile(FastNoiseLite& noise)
 
             int type = (8 * bottom) + (4 * right) + (2 * left) + (1 * top);
 
-            setTile(i, j, this->tileset->getTileBitmask(type));
+            Biome* biome = this->getBiome(i, j, noise);
+
+            if(biome == nullptr)
+            {
+                type = 0;
+            }
+            else
+            {
+                type = this->tileGroups->at(biome->tiles)[type];
+            }
+
+         //   std::cout << type << std::endl;
+         //   std::cout << this->tileset->getTileBitmask(type) << std::endl;
+
+
+            setTile(i, j, type);
         }
     }    
+}
+
+Biome* Chunk::getBiome(int x, int y, FastNoiseLite& noise)
+{
+    float height = noise.GetNoise((16 * this->coord.x + (float) x) / 5, (16 * this->coord.y + (float) y) / 5);
+
+   // std::cout << this->biomes->size() << std::endl;
+    for(const auto &[name, biome] : *(this->biomes))
+    {
+        std::cout << name << ": " << biome.lowerHeight << " <= " << height << " <= " << biome.upperHeight << std::endl;
+        if(biome.lowerHeight <= height && biome.upperHeight >= height)
+        {
+            std::cout << name << std::endl;
+            return &(this->biomes->at(name));
+        }
+    }
+
+    return nullptr;
 }
 
 Chunk::~Chunk()

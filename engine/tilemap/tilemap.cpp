@@ -16,14 +16,19 @@ Tilemap::Tilemap(int seed, Engine* engine)
 
     auto world = (*engine->getScripting())["world"].get_or_create<sol::table>();
     auto blocks = world["blocks"].get_or_create<sol::table>();
+    //auto biomes = world["biomes"].get_or_create<sol::table>();
 
     blocks.set_function("add", [this](int tile, int bitmask){
         this->tileset->setTileBitmask(tile, bitmask);
     });
 
-    blocks.set_function("addGroup", [this](std::string name, std::vector<int> tiles){
-        std::cout << "registering tile group " << name << std::endl;
-        this->tiles[name] = std::vector(tiles);
+    blocks.set_function("addGroup", [this](std::string name, std::vector<int> tileGroup){
+        this->tiles[name] = std::vector(tileGroup);
+    });
+
+    blocks.set_function("addBiome", [this](std::string name, std::string tiles, float lowerHeight, float upperHeight){
+        std::cout << "adding biome" << std::endl;
+        this->biomes[name] = Biome{ tiles: tiles, name: name, lowerHeight: lowerHeight, upperHeight: upperHeight };
     });
 
     this->state.texture = this->tileset->getTexture();
@@ -49,7 +54,7 @@ void Tilemap::addChunk(ChunkCoordinate coord)
     if(existingChunk != this->chunks.end()) 
         return;
 
-    Chunk* chunk = new Chunk(coord, this->tileset, this->seed);
+    Chunk* chunk = new Chunk(coord, this->tileset, this->biomes, this->tiles, this->seed);
     this->chunks.insert(std::make_pair(coord.y * 16 + coord.x, chunk));
 }
 
