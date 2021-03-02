@@ -10,6 +10,7 @@
 #include "../components/movement.h"
 #include "../components/position.h"
 #include "../components/motion.h"
+#include "../components/tilemapcollider.h"
 
 class Physics
 {

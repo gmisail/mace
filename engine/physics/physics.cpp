@@ -51,5 +51,53 @@ void Physics::update(entt::registry& registry, float delta, Input& input)
         position.x += motion.vx;
         position.y += motion.vy;
     }
-    // run physics simulation 
+    
+    /*
+    auto colliderView = registry.view<TilemapCollider, Motion, Position>();
+
+    for(auto& entity : view)
+    {
+        auto& motion = registry.get<Motion>(entity);
+        auto& position = registry.get<Position>(entity);
+        auto& collider = registry.get<TilemapCollider>(entity);
+
+        if(motion.vx <= 0)
+        {
+            float oldY = position.y -= motion.vy;
+
+            if(collider.tilemap->isTileSolid(position.x + 0.0f, oldY + 0.0f) || collider.tilemap->isTileSolid(position.x + 0.0f, oldY + 0.9f))
+            {
+                position.x = (int) position.x + 1;
+                motion.vx = 0;
+            }
+        }
+        else
+        {
+            float oldY = position.y -= motion.vy;
+
+            if(collider.tilemap->isTileSolid(position.x + 1.0f, oldY + 0.0f) || collider.tilemap->isTileSolid(position.x + 1.0f, oldY + 0.9f))
+            {
+                position.x = (int) position.x;
+                motion.vx = 0;
+            }
+        }
+
+        if(motion.vy <= 0)
+        {
+            if(collider.tilemap->isTileSolid(position.x + 0.0f, position.y) || collider.tilemap->isTileSolid(position.x + 0.9f, position.y))
+            {
+                position.y = (int) position.y + 1;
+                motion.vy = 0;
+            }
+        }
+        else 
+        {
+            if(collider.tilemap->isTileSolid(position.x + 0.0f, position.y + 1.0f) || collider.tilemap->isTileSolid(position.x + 9.0f, position.y + 1.0f))
+            {
+                position.y = (int) position.y;
+                motion.vy = 0;
+            }
+        }
+    }
+    */
 }

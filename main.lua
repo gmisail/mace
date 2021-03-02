@@ -33,8 +33,12 @@ world.blocks.add(33, 13)
 world.blocks.add(34, 14)
 world.blocks.add(35, 15)
 
+-- each biome has a set of different types of blocks
 world.blocks.addGroup("grass", { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 })
 world.blocks.addGroup("wacko", { 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34 })
 
+-- define each biome with what type of blocks it uses, and the threshold for which a biome will spawn
 world.blocks.addBiome("taiga", "grass", -1.0, 0.2)
 world.blocks.addBiome("wacko", "wacko", 0.2, 1.0)
+
+world.blocks.setSolid(12, true)

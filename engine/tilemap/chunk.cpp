@@ -29,7 +29,7 @@ Chunk::Chunk(ChunkCoordinate coord, Tileset* tileset, std::unordered_map<std::st
 
             float val = noise.GetNoise(16 * coord.x + (float) i, 16 * coord.y + (float) j) * 25;
 
-            if(val < 15)
+            if(val < 5)
                 tileNumber = TILE_WATER;
 
             int foregroundVal = rand() % 100;
@@ -79,6 +79,9 @@ Chunk::Chunk(ChunkCoordinate coord, Tileset* tileset, std::unordered_map<std::st
     std::cout << "creating chunk at " << this->coord.x << ", " << this->coord.y << std::endl;   
 }
 
+/*
+
+*/
 void Chunk::setTile(int x, int y, int id)
 {
     this->tiles[y * 16 + x] = id;
@@ -91,6 +94,16 @@ void Chunk::setTile(int x, int y, int id)
     quad[1].texCoords = sf::Vector2f((tu + 1) * TILE_SIZE, tv * TILE_SIZE);
     quad[2].texCoords = sf::Vector2f((tu + 1) * TILE_SIZE, (tv + 1) * TILE_SIZE);
     quad[3].texCoords = sf::Vector2f(tu * TILE_SIZE, (tv + 1) * TILE_SIZE);        
+}
+
+int Chunk::getTile(int x, int y)
+{
+    if(x >= 0 && x < 16 && y >= 0 && y < 16)
+    {
+        return this->tiles[y * 16 + x];
+    }
+
+    return 0;
 }
 
 void Chunk::autotile(FastNoiseLite& noise)
@@ -106,10 +119,10 @@ void Chunk::autotile(FastNoiseLite& noise)
 
             if(i == 0 || i == 15 || j == 0 || j == 15)
             {
-                top = (noise.GetNoise(16 * coord.x + (float) i, 16 * coord.y + (float) j - 1) * 25) >= 15;
-                bottom = (noise.GetNoise(16 * coord.x + (float) i, 16 * coord.y + (float) (j + 1)) * 25) >= 15;
-                right = (noise.GetNoise(16 * coord.x + (float) (i + 1), 16 * coord.y + (float) j) * 25) >= 15;
-                left = (noise.GetNoise(16 * coord.x + (float) i - 1, 16 * coord.y + (float) j) * 25) >= 15;
+                top = (noise.GetNoise(16 * coord.x + (float) i, 16 * coord.y + (float) j - 1) * 25) >= 5;
+                bottom = (noise.GetNoise(16 * coord.x + (float) i, 16 * coord.y + (float) (j + 1)) * 25) >= 5;
+                right = (noise.GetNoise(16 * coord.x + (float) (i + 1), 16 * coord.y + (float) j) * 25) >= 5;
+                left = (noise.GetNoise(16 * coord.x + (float) i - 1, 16 * coord.y + (float) j) * 25) >= 5;
             }
             else
             {
@@ -132,10 +145,6 @@ void Chunk::autotile(FastNoiseLite& noise)
                 type = this->tileGroups->at(biome->tiles)[type];
             }
 
-         //   std::cout << type << std::endl;
-         //   std::cout << this->tileset->getTileBitmask(type) << std::endl;
-
-
             setTile(i, j, type);
         }
     }    
@@ -143,15 +152,12 @@ void Chunk::autotile(FastNoiseLite& noise)
 
 Biome* Chunk::getBiome(int x, int y, FastNoiseLite& noise)
 {
-    float height = noise.GetNoise((16 * this->coord.x + (float) x) / 5, (16 * this->coord.y + (float) y) / 5);
+    float height = noise.GetNoise((16 * this->coord.x + (float) x) / 3, (16 * this->coord.y + (float) y) / 3);
 
-   // std::cout << this->biomes->size() << std::endl;
     for(const auto &[name, biome] : *(this->biomes))
     {
-        std::cout << name << ": " << biome.lowerHeight << " <= " << height << " <= " << biome.upperHeight << std::endl;
         if(biome.lowerHeight <= height && biome.upperHeight >= height)
         {
-            std::cout << name << std::endl;
             return &(this->biomes->at(name));
         }
     }

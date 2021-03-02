@@ -28,6 +28,8 @@ public:
     ~Chunk();
 
     void setTile(int, int, int);
+    int getTile(int, int);
+
     Biome* getBiome(int, int, FastNoiseLite&);
     void render(sf::RenderWindow &, sf::RenderStates &);
 
@@ -49,5 +51,10 @@ private:
 
     void autotile(FastNoiseLite&);
 };
+
+inline int chunkId(ChunkCoordinate coord)
+{
+    return coord.y * 1000 + coord.x;
+}
 
 #endif

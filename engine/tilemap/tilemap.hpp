@@ -13,6 +13,8 @@
 #include "biome.hpp"
 #include "../engine.hpp"
 
+class Engine;
+
 class Tilemap
 {
     public:
@@ -25,13 +27,19 @@ class Tilemap
     	void bindFunctions(sol::state&);
 
         void addChunk(ChunkCoordinate);
+        Chunk* getChunk(ChunkCoordinate);
         std::unordered_map<int, Chunk*>::iterator removeChunk(ChunkCoordinate);
         bool chunkExists(ChunkCoordinate);
+
+        int getTile(int, int);
+        bool isTileSolid(int, int);
         
         void cullChunks();
     private:
         Tileset* tileset;
         Camera* camera;
+
+        std::vector<bool> tileType;
         std::unordered_map<std::string, std::vector<int>> tiles;
         std::unordered_map<std::string, Biome> biomes;
 
